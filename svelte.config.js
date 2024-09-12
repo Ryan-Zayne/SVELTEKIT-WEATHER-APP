@@ -23,7 +23,7 @@ const config = {
 			"@": "src",
 		},
 		files: {
-			lib: "src/lib",
+			lib: "@/lib",
 			routes: "src/pages",
 		},
 	},

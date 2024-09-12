@@ -1,10 +1,5 @@
 {
 	"extends": ["./.svelte-kit/tsconfig.json", "@zayne-labs/tsconfig/bundler/dom/app"],
 
-	"compilerOptions": {
-		"baseUrl": ".",
-		"paths": {
-			"@/*": ["src/*"]
-		}
-	}
+	"exclude": ["node_modules"]
 }

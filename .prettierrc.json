@@ -1,0 +1,15 @@
+{
+	"plugins": ["prettier-plugin-svelte", "prettier-plugin-tailwindcss", "prettier-plugin-classnames", "prettier-plugin-merge"],
+	"overrides": [{ "files": "*.svelte", "options": { "parser": "svelte" } }],
+	"tailwindFunctions": ["cnMerge", "cnJoin", "cn", "tv"],
+	"customFunctions": ["cnMerge", "cnJoin", "cn", "tv"],
+	"tailwindAttributes": ["classNames"],
+	"customAttributes": ["classNames"],
+	"endingPosition": "absolute-with-indent",
+	"jsxSingleQuote": false,
+	"printWidth": 107,
+	"singleQuote": false,
+	"tabWidth": 3,
+	"trailingComma": "es5",
+	"useTabs": true
+}
