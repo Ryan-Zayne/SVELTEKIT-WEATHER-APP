@@ -4,7 +4,7 @@
 	import { callApi } from "@zayne-labs/callapi";
 	import type { FormEventHandler } from "svelte/elements";
 
-	let weatherLocationState = $state<Result | null>(null);
+	let locationState = $state<Result | null>(null);
 	let weatherForecastState = $state<ForecastResponse | null>(null);
 
 	const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
@@ -14,7 +14,7 @@
 
 		if (formData.city === "") return;
 
-		const { data, error } = await callApi<ApiResponse>(
+		const { data: locationData, error: locationError } = await callApi<ApiResponse>(
 			"https://geocoding-api.open-meteo.com/v1/search",
 			{
 				query: {
@@ -26,38 +26,38 @@
 			}
 		);
 
-		if (error) {
-			alert(error.message);
-			console.error(error.errorData);
+		if (locationError) {
+			alert(locationError.message);
+			console.error(locationError.errorData);
 			return;
 		}
 
-		if (!data.results || data.results.length === 0) {
+		if (!locationData.results || locationData.results.length === 0) {
 			alert("City not found");
 			return;
 		}
 
-		weatherLocationState = data.results[0] as Result;
+		locationState = locationData.results[0] as Result;
 
-		const weatherForecastResult = await callApi<ForecastResponse>(
+		const { data: weatherData, error: weatherError } = await callApi<ForecastResponse>(
 			"https://api.open-meteo.com/v1/forecast",
 			{
 				query: {
-					latitude: weatherLocationState.latitude,
-					longitude: weatherLocationState.longitude,
+					latitude: locationState.latitude,
+					longitude: locationState.longitude,
 					daily: "weather_code,temperature_2m_max,temperature_2m_min",
 					timezone: "auto",
 				},
 			}
 		);
 
-		if (weatherForecastResult.error) {
-			alert(weatherForecastResult.error.message);
-			console.error(weatherForecastResult.error.errorData);
+		if (weatherError) {
+			alert(weatherError.message);
+			console.error(weatherError.errorData);
 			return;
 		}
 
-		weatherForecastState = weatherForecastResult.data;
+		weatherForecastState = weatherData;
 	};
 </script>
 
@@ -86,11 +86,11 @@
 		</div>
 	</form>
 
-	{#if weatherLocationState}
-		<WeatherDisplay weatherLocation={weatherLocationState} />
+	{#if locationState}
+		<WeatherDisplay {locationState} />
 	{/if}
 
 	{#if weatherForecastState}
-		<WeatherForecast weatherForecast={weatherForecastState} />
+		<WeatherForecast {weatherForecastState} />
 	{/if}
 </main>

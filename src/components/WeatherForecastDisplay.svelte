@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { ForecastResponse } from "@/lib";
 
-	const { weatherForecast }: { weatherForecast: ForecastResponse } = $props();
+	const { weatherForecastState }: { weatherForecastState: ForecastResponse } = $props();
 
 	// Function to get weather icon SVG based on weather code
 	const getWeatherIcon = (code: number): string => {
@@ -33,18 +33,18 @@
 >
 	<h2 class="mb-4 text-2xl font-bold text-yellow-300">7-Day Forecast</h2>
 	<div class="space-y-4">
-		{#each weatherForecast.daily.time as day, index}
+		{#each weatherForecastState.daily.time as day, index}
 			<div class="flex items-center justify-between rounded-lg bg-blue-600 bg-opacity-30 p-3">
 				<div class="flex items-center space-x-3">
 					<span class="text-lg font-semibold">{formatDate(day)}</span>
-					{@html getWeatherIcon(weatherForecast.daily.weather_code[index] as number) as string}
+					{@html getWeatherIcon(weatherForecastState.daily.weather_code[index] as number) as string}
 				</div>
 				<div class="flex items-center space-x-2">
 					<span class="text-sm"
-						>{Math.round(weatherForecast.daily.temperature_2m_min[index] as number)}°</span
+						>{Math.round(weatherForecastState.daily.temperature_2m_min[index] as number)}°</span
 					>
 					<span class="text-lg font-bold"
-						>{Math.round(weatherForecast.daily.temperature_2m_max[index] as number)}°</span
+						>{Math.round(weatherForecastState.daily.temperature_2m_max[index] as number)}°</span
 					>
 				</div>
 			</div>
@@ -52,6 +52,10 @@
 	</div>
 
 	<div class="mt-4 text-sm">
-		<p>Coordinates: {weatherForecast.latitude.toFixed(2)}, {weatherForecast.longitude.toFixed(2)}</p>
+		<p>
+			Coordinates: {weatherForecastState.latitude.toFixed(2)}, {weatherForecastState.longitude.toFixed(
+				2
+			)}
+		</p>
 	</div>
 </div>

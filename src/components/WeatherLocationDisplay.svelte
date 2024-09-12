@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Result } from "@/lib";
 
-	const { weatherLocation }: { weatherLocation: Result } = $props();
+	const { locationState }: { locationState: Result } = $props();
 
 	const { name, country, admin1, admin2, latitude, longitude, elevation, population, timezone } =
-		weatherLocation;
+		locationState;
 </script>
 
 <div
