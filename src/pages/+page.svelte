@@ -1,26 +1,30 @@
 <script lang="ts">
-	import { WeatherDisplay } from "@/components";
-	import type { ApiResponse, Result } from "@/lib";
+	import { WeatherDisplay, WeatherForecast } from "@/components";
+	import type { ApiResponse, ForecastResponse, Result } from "@/lib";
 	import { callApi } from "@zayne-labs/callapi";
 	import type { FormEventHandler } from "svelte/elements";
 
-	let weatherState = $state<Result | null>(null);
+	let weatherLocationState = $state<Result | null>(null);
+	let weatherForecastState = $state<ForecastResponse | null>(null);
 
 	const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
 		event.preventDefault();
 
 		const formData = Object.fromEntries(new FormData(event.currentTarget));
 
-		const apiUrl = `https://geocoding-api.open-meteo.com/v1/search`;
+		if (formData.city === "") return;
 
-		const { data, error } = await callApi<ApiResponse>(apiUrl, {
-			query: {
-				name: formData.city as string,
-				count: 1,
-				language: "en",
-				format: "json",
-			},
-		});
+		const { data, error } = await callApi<ApiResponse>(
+			"https://geocoding-api.open-meteo.com/v1/search",
+			{
+				query: {
+					name: formData.city as string,
+					count: 1,
+					language: "en",
+					format: "json",
+				},
+			}
+		);
 
 		if (error) {
 			alert(error.message);
@@ -28,12 +32,37 @@
 			return;
 		}
 
-		weatherState = data.results[0] as Result;
+		if (!data.results || data.results.length === 0) {
+			alert("City not found");
+			return;
+		}
+
+		weatherLocationState = data.results[0] as Result;
+
+		const weatherForecastResult = await callApi<ForecastResponse>(
+			"https://api.open-meteo.com/v1/forecast",
+			{
+				query: {
+					latitude: weatherLocationState.latitude,
+					longitude: weatherLocationState.longitude,
+					daily: "weather_code,temperature_2m_max,temperature_2m_min",
+					timezone: "auto",
+				},
+			}
+		);
+
+		if (weatherForecastResult.error) {
+			alert(weatherForecastResult.error.message);
+			console.error(weatherForecastResult.error.errorData);
+			return;
+		}
+
+		weatherForecastState = weatherForecastResult.data;
 	};
 </script>
 
 <main
-	class="flex h-full flex-col items-center bg-gradient-to-b from-blue-400 to-blue-600 p-4 pt-[50px]
+	class="flex min-h-full flex-col items-center bg-gradient-to-b from-blue-400 to-blue-600 p-4 pt-[50px]
 		text-white"
 >
 	<h1 class="mb-8 text-center text-4xl font-bold">Weather App</h1>
@@ -57,7 +86,11 @@
 		</div>
 	</form>
 
-	{#if weatherState}
-		<WeatherDisplay {weatherState} />
+	{#if weatherLocationState}
+		<WeatherDisplay weatherLocation={weatherLocationState} />
+	{/if}
+
+	{#if weatherForecastState}
+		<WeatherForecast weatherForecast={weatherForecastState} />
 	{/if}
 </main>

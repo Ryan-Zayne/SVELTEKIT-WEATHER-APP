@@ -20,3 +20,22 @@ export type ApiResponse = {
 	results: Result[];
 	generationtime_ms: number;
 };
+
+export type ForecastResponse = {
+	latitude: number;
+	longitude: number;
+	timezone: string;
+	elevation: number;
+	daily_units: {
+		time: string;
+		weather_code: string;
+		temperature_2m_max: string;
+		temperature_2m_min: string;
+	};
+	daily: {
+		time: string[];
+		weather_code: number[];
+		temperature_2m_max: number[];
+		temperature_2m_min: number[];
+	};
+};

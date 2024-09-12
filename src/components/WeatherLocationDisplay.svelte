@@ -1,10 +1,10 @@
 <script lang="ts">
 	import type { Result } from "@/lib";
 
-	const { weatherState }: { weatherState: Result } = $props();
+	const { weatherLocation }: { weatherLocation: Result } = $props();
 
 	const { name, country, admin1, admin2, latitude, longitude, elevation, population, timezone } =
-		weatherState;
+		weatherLocation;
 </script>
 
 <div
@@ -63,7 +63,7 @@
 				<path d="M16 21l4-4-4-4"></path>
 				<path d="M20 17H4"></path>
 			</svg>
-			Elevation: {elevation.toFixed(1)} m
+			Elevation: {elevation} m
 		</p>
 		<p class="flex items-center">
 			<svg
