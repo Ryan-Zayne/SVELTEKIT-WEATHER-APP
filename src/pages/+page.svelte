@@ -62,7 +62,7 @@
 </script>
 
 <main
-	class="flex min-h-full flex-col items-center bg-gradient-to-b from-blue-400 to-blue-600 p-4 pt-[50px]
+	class="flex min-h-svh flex-col items-center bg-gradient-to-b from-blue-400 to-blue-600 p-4 pt-[50px]
 		text-white"
 >
 	<h1 class="mb-8 text-center text-4xl font-bold">Weather App</h1>
