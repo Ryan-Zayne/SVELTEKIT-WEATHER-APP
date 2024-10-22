@@ -87,10 +87,10 @@
 	</form>
 
 	{#if locationState}
-		<WeatherDisplay {locationState} />
+		<WeatherDisplay {...locationState} />
 	{/if}
 
 	{#if weatherForecastState}
-		<WeatherForecast {weatherForecastState} />
+		<WeatherForecast {...weatherForecastState} />
 	{/if}
 </main>
